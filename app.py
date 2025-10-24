@@ -5,10 +5,9 @@ from urllib.parse import urlparse
 from tld import get_tld
 from googlesearch import search
 from flask import Flask, request, jsonify, render_template
-import xgboost as xgb # It's good practice to have the library imported
+import xgboost as xgb 
 
-# --- Feature Engineering Functions ---
-# This entire section is identical to the previous version.
+# Feature Engineering
 
 def having_ip_address(url):
     match = re.search(
@@ -109,7 +108,7 @@ def tld_length(tld):
     except:
         return -1
 
-# --- Main Feature Extraction Pipeline ---
+# Main Feature Extraction Pipeline 
 def extract_features(url):
     status = []
     status.append(having_ip_address(url))
@@ -137,7 +136,7 @@ def extract_features(url):
     status.append(tld_length(tld))
     return status
 
-# --- Load Model and Define Feature Names ---
+# Load Model and Define Feature Names
 try:
     model = joblib.load('model.pkl')
     print("XGBoost model loaded successfully.")
@@ -155,10 +154,10 @@ feature_names = [
     'sus_url', 'count-digits', 'count-letters', 'fd_length', 'tld_length'
 ]
 
-# --- Flask App Initialization ---
+# Flask App Initialization 
 app = Flask(__name__)
 
-# --- API Endpoints ---
+# PI Endpoints 
 @app.route('/')
 def home():
     return render_template('index.html')
@@ -194,7 +193,7 @@ def predict():
     except Exception as e:
         return jsonify({'error': str(e)}), 400
 
-# --- Run the Application ---
+# Run the Application 
 if __name__ == '__main__':
     app.run(port=5000, debug=True)
 
